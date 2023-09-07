@@ -1,0 +1,641 @@
+'GEN_BACKUP_SAVER
+
+Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
+    If Len(Dir(ActiveWorkbook.Path & "\BACKUPS", vbDirectory)) = 0 Then
+        MkDir ActiveWorkbook.Path & "\BACKUPS"
+    End If
+    ActiveWorkbook.SaveCopyAs filename:=ActiveWorkbook.Path & "\BACKUPS\BREAST CANCER CONF. BACKUP - " & Format(Now(), "MM-DD-YYYY") & ".XLSM"
+End Sub
+
+'GEN_ALL_CAPS_COVERTER
+
+Sub UpperCase()
+
+Dim rngText As Range, CL As Range
+Dim lRow As Integer
+Dim lCol As Integer
+
+'Application.ScreenUpdating = False
+
+For Each CL In Selection
+    If CL <> "" Then
+        CL = UCase(CL.Value)
+        CL.Value = WorksheetFunction.Trim(CL)
+    End If
+Next
+
+With Selection.Font
+        .Name = "Calibri"
+        .Size = 9
+        .Strikethrough = False
+        .Superscript = False
+        .Subscript = False
+        .OutlineFont = False
+        .Shadow = False
+        .Underline = xlUnderlineStyleNone
+        .ThemeColor = xlThemeColorLight1
+        .TintAndShade = 0
+        .ThemeFont = xlThemeFontNone
+    End With
+    
+Application.ScreenUpdating = True
+
+    MsgBox "DONE!"
+End Sub
+
+
+
+Sub CONVERT_2_TEXT()
+
+Dim CL As Range
+
+For Each CL In Selection
+    CL = "'" & CStr(CL.Value)
+Next
+
+MsgBox "DONE!"
+
+End Sub
+
+
+
+Sub CONVERT_REDACT()
+
+Dim CL As Range
+Dim oldstr As String, newstr As String, tempstr As String
+Dim lRow As Long, lCol As Long, i As Long, p As Long
+
+Application.ScreenUpdating = False
+
+oldstr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+newstr = "************************************"
+
+For Each CL In Selection
+    tempstr = CL
+    For i = 1 To Len(tempstr)
+        p = InStr(oldstr, Mid(tempstr, i, 1))
+        If p > 0 Then Mid(tempstr, i, 1) = Mid(newstr, p, 1)
+    Next
+    CL = tempstr
+Next
+
+Application.ScreenUpdating = True
+
+MsgBox "DONE!"
+
+End Sub
+
+
+Sub CONVERT_REDACT_HAI_UNITS()
+
+Dim CL As Range
+Dim oldstr As String, newstr As String, tempstr As String
+Dim lRow As Long, lCol As Long, i As Long, p As Long
+
+'Application.ScreenUpdating = False
+
+oldstr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-<>=abcdefghijklmnopqrstuvwxyz"
+newstr = "******************************************************************"
+
+For Each CL In Selection
+    tempstr = CL
+    For i = InStr(tempstr, "-") To Len(tempstr)
+        p = InStr(oldstr, Mid(tempstr, i, 1))
+        If p > 0 Then Mid(tempstr, i, 1) = Mid(newstr, p, 1)
+    Next
+    CL = tempstr
+Next
+
+'Application.ScreenUpdating = True
+
+MsgBox "DONE!"
+
+End Sub
+
+
+
+Sub ODD_ROW_HIGHLIGHT()
+
+Dim CL As Range
+    
+    For Each CL In Selection
+
+        If CL.Row Mod 2 = 0 Then
+            With CL.Interior
+                .Pattern = xlSolid
+                .PatternColorIndex = xlAutomatic
+                .ThemeColor = xlThemeColorLight2
+                .TintAndShade = 0.799981688894314
+                .PatternTintAndShade = 0
+            End With
+        End If
+    Next
+
+End Sub
+
+
+
+
+'GEN_DLT_EMPTY_IN_RNG
+
+Sub EIN_DLT_EMPTY_IN_RNG()
+Dim countquit As Long
+Dim SRCHTERM As String
+    
+    SRCHTERM = InputBox("ENTER A SEARCH PARAMETER TO FIND AND ERASE ENTIRE ROWS:", "Character Search")
+    Application.ScreenUpdating = False
+        
+    For Each x In Selection
+        If ActiveCell.Value Like "*" & SRCHTERM & "*" Then
+            ActiveCell.EntireRow.Delete
+        Else
+            ActiveCell.Offset(1, 0).Select
+        End If
+    Next x
+    Application.ScreenUpdating = True
+    
+End Sub
+
+
+Sub EIN_DLT_EMPTY_IN_RNG2()
+
+        
+    For Each x In Selection
+        If ActiveCell.Value = "" Then
+            ActiveCell.EntireRow.Delete
+        Else
+            ActiveCell.Offset(1, 0).Select
+        End If
+    Next x
+    
+End Sub
+
+
+
+
+'GEN_DARKLINEBORDER
+
+Sub DARKLINEBORDER()
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThick
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThick
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThick
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThick
+    End With
+    Selection.Borders(xlInsideVertical).LineStyle = xlSolid
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlSolid
+End Sub
+
+
+'GEN_UNHIDE_ME
+
+Sub unhide_me()
+	ActiveSheet.Cells.EntireRow.Hidden = False
+	ActiveSheet.Cells.EntireColumn.Hidden = False
+End Sub
+
+
+
+'GEN_UNRESTRICT_FORMAT
+
+Sub DERESTRICT_FORMAT()
+
+   Dim ZoomBtn As CommandBarControl
+    Dim RollZoomStatus As Boolean
+    Dim CB As CommandBar
+
+        Application.ScreenUpdating = True
+        
+        Application.DisplayAlerts = True
+
+        ActiveSheet.Protect Contents:=False
+        
+        ActiveSheet.Protect AllowFormattingCells:=False
+
+        ActiveSheet.Protect AllowInsertingColumns:=False
+
+        ActiveSheet.Protect AllowInsertingRows:=False
+
+        ActiveSheet.Protect AllowInsertingHyperlinks:=False
+
+        ActiveSheet.Protect AllowDeletingColumns:=False
+
+        ActiveSheet.Protect AllowDeletingRows:=False
+
+        ActiveSheet.Protect AllowSorting:=False
+
+        ActiveSheet.Protect AllowFiltering:=False
+
+        ActiveSheet.Protect AllowUsingPivotTables:=False
+
+
+        ActiveWindow.Zoom = 80
+        With Application
+            RollZoomStatus = .RollZoom
+            .RollZoom = False
+            Set CB = .CommandBars("Worksheet Menu Bar")
+            Set ZoomBtn = CB.Controls("View").Controls("Zoom...")
+            ZoomBtn.Enabled = True
+        End With
+        
+End Sub
+
+
+'GEN_PROTECTION_HACK
+
+Public Sub CrackWB() 'Brute force attack
+        Dim W1 As Worksheet, W2 As Worksheet
+        Dim i As Integer, j As Integer, k As Integer, l As Integer
+        Dim m As Integer, n As Integer, i1 As Integer, i2 As Integer
+        Dim i3 As Integer, i4 As Integer, i5 As Integer, i6 As Integer
+        Dim PWORD1 As String
+        Dim ShTag As Boolean, WinTag As Boolean
+        
+        Const DBLSPACE As String = vbNewLine & vbNewLine
+        Const HEADER As String = "AllInternalPasswords User Message"
+        
+        Const ALLCLEAR As String = DBLSPACE & "The workbook should " & _
+                "now be free of all password protection."
+                
+        Const MSGNOPWORDS1 As String = "There were no passwords on " & _
+                "sheets, or workbook structure or windows."
+                
+        Const MSGNOPWORDS2 As String = "There was no protection to " & _
+                "workbook structure or windows." & DBLSPACE & _
+                "Proceeding to unprotect sheets."
+                
+        Const MSGTAKETIME As String = "After pressing OK button this " & _
+                "will take some time." & DBLSPACE & "Amount of time " & _
+                "depends on how many different passwords, the " & _
+                "passwords, and your computer's specification."
+                
+        Const MSGPWORDFOUND1 As String = "You had a Worksheet " & _
+                "Structure or Windows Password set." & DBLSPACE & _
+                "The password found was: " & DBLSPACE & "$$" & DBLSPACE & _
+                "Note it down for potential future use in other workbooks by " & _
+                "the same person who set this password." & DBLSPACE & _
+                "Now to check and clear other passwords."
+                
+
+        
+        Application.ScreenUpdating = False
+        With ActiveWorkbook
+            WinTag = .ProtectStructure Or .ProtectWindows
+        End With
+        
+        ShTag = False
+        For Each W1 In Worksheets
+                ShTag = W1.ProtectContents
+        Next W1
+        
+        If Not WinTag Then
+            MsgBox MSGNOPWORDS1, vbInformation, HEADER
+            Exit Sub
+        Else
+        MsgBox MSGTAKETIME, vbInformation, HEADER
+          On Error Resume Next
+          Do      'dummy do loop
+            For i = 65 To 66: For j = 65 To 66: For k = 65 To 66
+            For l = 65 To 66: For m = 65 To 66: For i1 = 65 To 66
+            For i2 = 65 To 66: For i3 = 65 To 66: For i4 = 65 To 66
+            For i5 = 65 To 66: For i6 = 65 To 66: For n = 32 To 126
+            With ActiveWorkbook
+              .Unprotect Chr(i) & Chr(j) & Chr(k) & _
+                 Chr(l) & Chr(m) & Chr(i1) & Chr(i2) & _
+                 Chr(i3) & Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+              If .ProtectStructure = False And .ProtectWindows = False Then
+                  PWORD1 = Chr(i) & Chr(j) & Chr(k) & Chr(l) & _
+                    Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & _
+                    Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+                  MsgBox Application.Substitute(MSGPWORDFOUND1, _
+                        "$$", PWORD1), vbInformation, HEADER
+                  Exit Do  'Bypass all for...nexts
+              End If
+            End With
+            Next: Next: Next: Next: Next: Next
+            Next: Next: Next: Next: Next: Next
+          Loop Until True
+          On Error GoTo 0
+        End If
+        MsgBox ALLCLEAR & AUTHORS & Version & REPBACK, vbInformation, HEADER
+        Application.ScreenUpdating = True
+End Sub
+
+Public Sub CrackWS() 'Brute force attack
+        Dim W1 As Worksheet, W2 As Worksheet
+        Dim i As Integer, j As Integer, k As Integer, l As Integer
+        Dim m As Integer, n As Integer, i1 As Integer, i2 As Integer
+        Dim i3 As Integer, i4 As Integer, i5 As Integer, i6 As Integer
+        Dim PWORD1 As String
+        Dim ShTag As Boolean, WinTag As Boolean
+        
+        Const DBLSPACE As String = vbNewLine & vbNewLine
+        Const HEADER As String = "AllInternalPasswords User Message"
+        
+        Const ALLCLEAR As String = DBLSPACE & "The workbook should " & _
+                "now be free of all password protection."
+                
+        Const MSGNOPWORDS1 As String = "There were no passwords on " & _
+                "sheets, or workbook structure or windows."
+                
+        Const MSGNOPWORDS2 As String = "There was no protection to " & _
+                "workbook structure or windows." & DBLSPACE & _
+                "Proceeding to unprotect sheets."
+                
+        Const MSGTAKETIME As String = "After pressing OK button this " & _
+                "will take some time." & DBLSPACE & "Amount of time " & _
+                "depends on how many different passwords, the " & _
+                "passwords, and your computer's specification."
+                 
+        Const MSGPWORDFOUND2 As String = "You had a Worksheet " & _
+                "password set." & DBLSPACE & "The password found was: " & _
+                DBLSPACE & "$$" & DBLSPACE & "Note it down for potential " & _
+                "future use in other workbooks by same person who " & _
+                "set this password." & DBLSPACE & "Now to check and clear " & _
+                "other passwords."
+
+        Application.ScreenUpdating = False
+        
+        ShTag = False
+        For Each W1 In Worksheets
+                ShTag = W1.ProtectContents
+                Exit For
+        Next W1
+        
+        If Not ShTag Then
+            MsgBox MSGNOPWORDS1, vbInformation, HEADER
+            Application.ScreenUpdating = True
+            Exit Sub
+        End If
+        
+        On Error GoTo 0
+        ShTag = False
+        For Each W1 In Worksheets
+          'Checks for all clear ShTag triggered to 1 if not.
+          If Not ShTag = W1.ProtectContents Then
+            Exit For
+          End If
+        Next W1
+        
+        If ShTag Then
+            MsgBox MSGNOPWORDS1, vbInformation, HEADER
+            Exit Sub
+        Else
+            MsgBox MSGTAKETIME, vbInformation, HEADER
+            For Each W1 In Worksheets
+              With W1
+                If .ProtectContents Then
+                  On Error Resume Next
+                  Do      'Dummy do loop
+                    For i = 65 To 66: For j = 65 To 66: For k = 65 To 66
+                    For l = 65 To 66: For m = 65 To 66: For i1 = 65 To 66
+                    For i2 = 65 To 66: For i3 = 65 To 66: For i4 = 65 To 66
+                    For i5 = 65 To 66: For i6 = 65 To 66: For n = 32 To 126
+                    .Unprotect Chr(i) & Chr(j) & Chr(k) & _
+                      Chr(l) & Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & _
+                      Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+                    If Not .ProtectContents Then
+                      PWORD1 = Chr(i) & Chr(j) & Chr(k) & Chr(l) & _
+                        Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & _
+                        Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+                      MsgBox Application.Substitute(MSGPWORDFOUND2, _
+                            "$$", PWORD1), vbInformation, HEADER
+                      'leverage finding Pword by trying on other sheets
+                      For Each W2 In Worksheets
+                        W2.Unprotect PWORD1
+                      Next W2
+                      Exit Do  'Bypass all for...nexts
+                    End If
+                    Next: Next: Next: Next: Next: Next
+                    Next: Next: Next: Next: Next: Next
+                  Loop Until True
+                  On Error GoTo 0
+                End If
+              End With
+            Next W1
+        End If
+        Application.ScreenUpdating = True
+        MsgBox ALLCLEAR & AUTHORS & Version & REPBACK, vbInformation, HEADER
+        
+End Sub
+
+Sub PasswordBreaker()
+'Author unknown but submitted by brettdj of www.experts-exchange.com
+
+    Dim i As Integer, j As Integer, k As Integer
+    Dim l As Integer, m As Integer, n As Integer
+    Dim i1 As Integer, i2 As Integer, i3 As Integer
+    Dim i4 As Integer, i5 As Integer, i6 As Integer
+    On Error Resume Next
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
+    For i = 65 To 66:
+       For j = 65 To 66:
+          For k = 65 To 66
+             For l = 65 To 66:
+                For m = 65 To 66:
+                    For i1 = 65 To 66
+                       For i2 = 65 To 66:
+                          For i3 = 65 To 66:
+                             For i4 = 65 To 66
+                                For i5 = 65 To 66:
+                                    For i6 = 65 To 66:
+                                       For n = 32 To 126
+                                        
+                                          ActiveSheet.Unprotect Chr(i) & Chr(j) & Chr(k) & _
+                                              Chr(l) & Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & _
+                                              Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+                                                                    
+                                            If ActiveSheet.ProtectContents = False Then
+
+                                                MsgBox "One usable password is " & Chr(i) & Chr(j) & Chr(k) & Chr(l) & Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+
+                                                ActiveWorkbook.Sheets(1).Select
+                                                Range("A1").Value = Chr(i) & Chr(j) & Chr(k) & Chr(l) & Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
+
+                                                Exit Sub
+                                            End If
+                                            
+                                       Next:
+                                    Next:
+                                Next:
+                             Next:
+                          Next:
+                       Next:
+                    Next:
+                Next:
+             Next:
+          Next:
+       Next:
+    Next
+    
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    MsgBox "DONE! - " & Now()
+
+End Sub
+
+Sub TRY_THIS_INSTEAD()
+Dim W1 As Worksheet, W2 As Worksheet, PWORD1 As String, ROWX As Long
+
+    ROWX = 1
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    On Error Resume Next
+    
+    For Each W1 In Worksheets
+        Do While Sheets("HABTable").Cells(ROWX, 16).Value <> ""
+            W1.Unprotect (Sheets("HABTable").Cells(ROWX, 16).Value)
+            If W1.ProtectContents = False Then
+                PWORD1 = Sheets("HABTable").Cells(ROWX, 16).Value
+                For Each W2 In Worksheets
+                    W2.Unprotect PWORD1
+                Next W2
+                
+            ElseIf ROWX = 194560 Then
+                MsgBox "REACHED END OF PASSWORD LIST"
+                
+            End If
+            ROWX = ROWX + 1
+        Loop
+    Next W1
+    
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    MsgBox "DONE! - " & Now()
+End Sub
+
+Sub TRY_THIS_INSTEAD2()
+Dim W1 As Worksheet, W2 As Worksheet, PWORD1 As String, ROWX As Long, t As Single, t1 As Single
+
+    t = Timer
+
+    ROWX = 1
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    On Error Resume Next
+    t1 = Timer
+        Do While Sheets("HABTable").Cells(ROWX, 16).Value <> ""
+            
+            ActiveWorkbook.Unprotect (Sheets("HABTable").Cells(ROWX, 16).Value)
+            If ActiveWorkbook.ProtectStructure = False And ActiveWorkbook.ProtectWindows = False Then
+                PWORD1 = Sheets("HABTable").Cells(ROWX, 16).Value
+            
+            ElseIf ROWX Mod 100 = 0 Then
+                MsgBox "Time elapsed for 100: " & Timer - t1
+                t1 = Timer
+                
+            ElseIf ROWX = 194560 Then
+                MsgBox "REACHED END OF PASSWORD LIST"
+                
+            End If
+            ROWX = ROWX + 1
+        Loop
+    
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    MsgBox "DONE! - " & Now() & vbCrLf & "Elapsed time: " & Timer - t
+    
+End Sub
+
+
+
+'GEN_MOVE_ALL_TO_1_COL
+
+Sub DELETE_ROW_IF_EMPTY()
+
+Range("a4").Select
+
+Do While ActiveCell.Row < 219
+
+    If WorksheetFunction.CountA(Range("a" & ActiveCell.Row, "AA" & ActiveCell.Row)) = 0 Or Cells(ActiveCell.Row, 4).Value = 0# Then
+        ActiveCell.EntireRow.Delete
+    Else
+        ActiveCell.Offset(1, 0).Select
+    End If
+
+
+Loop
+
+End Sub
+
+Sub MOVE_ALL_2_SINGLE_COL()
+
+Dim CL As Range, ROWX As Long
+
+ROWX = 157
+
+For Each CL In Selection
+    If CL <> "" Then
+        Cells(ROWX, 1).Value = CL
+        ROWX = ROWX + 1
+    End If
+
+Next
+
+End Sub
+
+
+
